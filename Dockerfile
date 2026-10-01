@@ -8,8 +8,8 @@ WORKDIR /app
 # Run as a non-root user (security best practice)
 RUN useradd --create-home --shell /usr/sbin/nologin appuser
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY requirements.txt requirements-dev.txt ./
+RUN pip install --no-cache-dir -r requirements-dev.txt
 
 COPY app ./app
 

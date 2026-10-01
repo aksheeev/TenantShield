@@ -17,6 +17,10 @@ class Settings(BaseSettings):
     environment: str = "development"
     debug: bool = False
 
+    database_url: str = "postgresql+psycopg://tenantshield:change_me_locally@db:5432/tenantshield"
+    database_app_url: str = "postgresql+psycopg://tenantshield_app:change_me_locally@db:5432/tenantshield"
+    secret_key: str = "dev-only-change-me"
+
 
 @lru_cache
 def get_settings() -> Settings:
