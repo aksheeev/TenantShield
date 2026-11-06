@@ -35,10 +35,10 @@ A secure multi-tenant SaaS backend where many organizations share one system but
 - [x] FastAPI app with `/health` endpoint and first test
 - [x] Docker and docker-compose (app, PostgreSQL, Redis)
 - [x] CI pipeline (lint and tests)
-- [ ] Database models and Alembic migrations
-- [ ] Tenant and user models, JWT auth with argon2
-- [ ] Role-based access control (admin, member, viewer)
-- [ ] PostgreSQL row-level security and cross-tenant isolation tests
+- [x] Database models and Alembic migrations
+- [x] Tenant and user models, JWT auth with argon2
+- [x] Role-based access control (admin, member, viewer)
+- [x] PostgreSQL row-level security and cross-tenant isolation tests
 - [ ] Hash-chained audit log
 - [ ] Redis rate limiting
 - [ ] Bandit, pip-audit, and Trivy in CI

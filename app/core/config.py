@@ -1,4 +1,5 @@
 from functools import lru_cache
+from pydantic import field_validator
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -19,7 +20,17 @@ class Settings(BaseSettings):
 
     database_url: str = "postgresql+psycopg://tenantshield:change_me_locally@db:5432/tenantshield"
     database_app_url: str = "postgresql+psycopg://tenantshield_app:change_me_locally@db:5432/tenantshield"
-    secret_key: str = "dev-only-change-me"
+    secret_key: str
+
+    @field_validator("secret_key")
+    @classmethod
+    def secret_key_must_be_long(cls, value: str) -> str:
+        if len(value) < 32:
+            raise ValueError(
+                "SECRET_KEY must be at least 32 characters. "
+                'Generate one: python -c "import secrets; print(secrets.token_hex(32))"'
+            )
+        return value
 
 
 @lru_cache
