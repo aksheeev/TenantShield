@@ -4,6 +4,7 @@ from sqlalchemy import text
 
 from app.db.session import SessionLocal
 from app.main import app
+from app.core.rate_limit import clear_rate_limits
 
 PASSWORD = "TestPass123!"
 
@@ -11,6 +12,7 @@ PASSWORD = "TestPass123!"
 @pytest.fixture(autouse=True)
 def clean_database():
     """Wipes tenant data before every test."""
+    clear_rate_limits()
     db = SessionLocal()
     try:
         db.execute(text("TRUNCATE users, projects, tenants CASCADE"))

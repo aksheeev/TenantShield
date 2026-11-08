@@ -22,6 +22,10 @@ class Settings(BaseSettings):
     database_app_url: str = "postgresql+psycopg://tenantshield_app:change_me_locally@db:5432/tenantshield"
     secret_key: str
 
+    redis_url: str = "redis://redis:6379/0"
+    login_rate_limit_attempts: int = 10
+    login_rate_limit_window_seconds: int = 60
+
     @field_validator("secret_key")
     @classmethod
     def secret_key_must_be_long(cls, value: str) -> str:

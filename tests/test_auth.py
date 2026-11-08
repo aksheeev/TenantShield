@@ -75,3 +75,10 @@ def test_alg_none_token_rejected(client, signup, bearer):
 def test_weak_secret_key_is_rejected():
     with pytest.raises(ValidationError):
         Settings(secret_key="short")
+
+def test_signup_rejects_short_password(client):
+    resp = client.post(
+        "/api/v1/auth/signup",
+        json={"tenant_name": "Acme", "email": "a@example.com", "password": "short"},
+    )
+    assert resp.status_code == 422

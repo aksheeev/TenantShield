@@ -9,8 +9,15 @@ from app.db.session import get_db
 from app.models.tenant import Tenant
 from app.models.user import User
 from app.schemas.auth import LoginRequest, SignupRequest, TokenResponse
+from app.core.config import get_settings
+from app.core.rate_limit import rate_limit
 
 router = APIRouter(prefix="/auth", tags=["auth"])
+
+settings = get_settings()
+login_limiter = rate_limit(
+    "login", settings.login_rate_limit_attempts, settings.login_rate_limit_window_seconds
+)
 
 
 @router.post("/signup", response_model=TokenResponse, status_code=status.HTTP_201_CREATED)
@@ -38,7 +45,7 @@ def signup(payload: SignupRequest, db: Session = Depends(get_db)):
     return TokenResponse(access_token=token)
 
 
-@router.post("/login", response_model=TokenResponse)
+@router.post("/login", response_model=TokenResponse, dependencies=[Depends(login_limiter)])
 def login(payload: LoginRequest, db: Session = Depends(get_db)):
     user = db.execute(select(User).where(User.email == payload.email)).scalar_one_or_none()
     if not user or not verify_password(payload.password, user.hashed_password):
