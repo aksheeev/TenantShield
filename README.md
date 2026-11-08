@@ -46,16 +46,16 @@ A secure multi-tenant SaaS backend where many organizations share one system but
 - [x] User management endpoint (admin-only, tenant-scoped)
 - [x] Auth and RBAC negative tests (tampered, expired and `alg: none` JWTs, role checks)
 - [ ] Hash-chained audit log
-- [ ] Redis rate limiting
+- [x] Redis rate limiting
 - [ ] Deployment (Render, Neon, Upstash)
 - [ ] Threat model and OWASP Top 10 mapping
 - [ ] Optional: PII redaction endpoint for LLM inputs
 
 ### Security testing (VAPT) of this project
 Testing is done against my own local docker-compose instance only.
-- [ ] IDOR test: `GET /projects/{id}` across tenants, with an automated regression test
-- [ ] Intercept and replay API traffic with Burp Suite (Proxy, Repeater)
-- [ ] Brute-force the login endpoint with Burp Intruder, then fix with Redis rate limiting and re-test
+- [x] IDOR test: `GET /projects/{id}` across tenants, with an automated regression test
+- [x] Intercept and replay API traffic with Burp Suite (Proxy, Repeater)
+- [x] Brute-force the login endpoint with Burp Intruder, then fix with Redis rate limiting and re-test
 - [ ] Automated scan of the API with OWASP ZAP
 - [ ] JWT attack testing: tampering, `alg: none`, expiry, key confusion
 - [ ] Port and service scan of the docker-compose stack with Nmap
@@ -120,7 +120,7 @@ Findings in my own project, tracked with severity and status. The severity ratin
 | ID | Finding | Severity | Found by | Status |
 |---|---|---|---|---|
 | TS-001 | Default fallback JWT secret allowed forged tokens if `SECRET_KEY` was unset | High | Code review | Fixed: `SECRET_KEY` is now required and must be 32+ characters |
-| TS-002 | No rate limiting on `/auth/login`, so brute force is possible | Medium | Code review | Open |
+| TS-002 | Login brute-force protection: no rate limiting on `/auth/login` | Medium | Code review, Burp Intruder | Mitigated: Redis limiter (10 per minute per IP). Re-test in progress, see `docs/security-testing.md` |
 | TS-003 | Default database password committed in `config.py` and the migration | Medium | Code review | Open |
 | TS-004 | Signup response reveals which emails are already registered | Low | Code review | Open |
 | TS-005 | Role is embedded in the JWT, so a role change or revocation is not reflected until expiry | Low | Code review | Open |
