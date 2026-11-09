@@ -4,13 +4,13 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.core.config import get_settings
+from app.core.rate_limit import rate_limit
 from app.core.security import create_access_token, hash_password, verify_password
 from app.db.session import get_db
 from app.models.tenant import Tenant
 from app.models.user import User
 from app.schemas.auth import LoginRequest, SignupRequest, TokenResponse
-from app.core.config import get_settings
-from app.core.rate_limit import rate_limit
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 

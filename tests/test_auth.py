@@ -54,7 +54,7 @@ def test_garbage_token_rejected(client, bearer):
 
 def test_expired_token_rejected(client, signup, bearer):
     claims = _claims(signup("Acme", "admin@example.com"))
-    claims["exp"] = dt.datetime.now(dt.timezone.utc) - dt.timedelta(hours=1)
+    claims["exp"] = dt.datetime.now(dt.UTC) - dt.timedelta(hours=1)
     expired = jwt.encode(claims, settings.secret_key, algorithm="HS256")
     assert client.get("/api/v1/projects", headers=bearer(expired)).status_code == 401
 

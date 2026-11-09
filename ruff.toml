@@ -1,0 +1,12 @@
+[lint]
+# EXE002 reads file permission bits. Docker Desktop on Windows reports every
+# bind-mounted file as executable, while Git stores these files as 100644.
+ignore = ["EXE002"]
+
+[lint.flake8-bugbear]
+# FastAPI injects dependencies through Depends() in argument defaults,
+# which B008 flags by design.
+extend-immutable-calls = [
+    "fastapi.Depends",
+    "app.api.deps.require_role",
+]

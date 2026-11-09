@@ -1,5 +1,6 @@
 from pydantic import BaseModel, EmailStr, Field
 
+
 class SignupRequest(BaseModel):
     tenant_name: str
     email: EmailStr

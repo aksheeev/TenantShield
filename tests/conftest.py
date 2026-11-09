@@ -2,9 +2,9 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import text
 
+from app.core.rate_limit import clear_rate_limits
 from app.db.session import SessionLocal
 from app.main import app
-from app.core.rate_limit import clear_rate_limits
 
 PASSWORD = "TestPass123!"
 
