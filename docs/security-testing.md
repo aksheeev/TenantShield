@@ -82,3 +82,33 @@ The route handler has no tenant filter, so the 404 is produced by RLS, and the d
 ## TS-007: No password policy on signup
 Severity Low. Signup accepted any password. Fixed: 8 to 128 characters in the schema, covered by
 `test_signup_rejects_short_password`. The upper bound also limits argon2 hashing cost on huge inputs.
+
+## Nmap scan of the local stack (own machine only)
+
+Scoped scan: `nmap -sT -sV -p 8000,5432,6379 127.0.0.1`. Output: `docs/evidence/nmap-localhost.txt`.
+Interface check against the Wi-Fi address: `docs/evidence/nmap-wifi-interface.txt`.
+
+| Port | Service | Published to | Observed on Wi-Fi address |
+|---|---|---|---|
+| 8000 | uvicorn | all interfaces | open |
+| 5432 | PostgreSQL | 127.0.0.1 only | closed |
+| 6379 | Redis 7.4.11 | 127.0.0.1 only | closed |
+
+Redis accepts unauthenticated commands (`redis-info` script returned server details): **yes** (TS-008).
+Limit: the interface check ran from the same machine, so it shows what is bound where,
+not what the host firewall allows from other devices.
+
+## Dependency and image scanning
+
+| Tool | Where it runs | Result |
+|---|---|---|
+| Bandit (`-ll`) | CI `security-scan` job and locally | No issues; 367 lines scanned |
+| pip-audit | CI `security-scan` job and locally | No known vulnerabilities |
+| Trivy 0.69.3 | Locally only | 49 HIGH, 0 CRITICAL, all in the Debian 13.7 base image (13 distinct CVEs); 0 in Python packages. Triage pending, mostly no fix available yet. |
+
+Limits: Bandit scans only `app/` and uses heuristics, so it does not prove the f-string in
+`SET LOCAL app.current_tenant` is safe. That safety comes from validating the value as a UUID first.
+**Why Trivy is not in CI yet:** in March 2026 Trivy and its GitHub Action were compromised
+(advisory GHSA-69fq-xp46-6x23). Attackers force-pushed 76 of 77 `trivy-action` tags to malicious
+code, so pinning to a tag is not safe. I run Trivy locally from a version the advisory lists as safe
+and will add it to CI pinned by commit SHA or image digest.

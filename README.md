@@ -58,11 +58,11 @@ Testing is done against my own local docker-compose instance only.
 - [x] Brute-force the login endpoint with Burp Intruder, then fix with Redis rate limiting and re-test
 - [ ] Automated scan of the API with OWASP ZAP
 - [ ] JWT attack testing: tampering, `alg: none`, expiry, key confusion
-- [ ] Port and service scan of the docker-compose stack with Nmap
-- [ ] Static analysis with Bandit and dependency audit with pip-audit
-- [ ] Container image scan with Trivy
-- [ ] Add Bandit, pip-audit and Trivy to CI
-- [ ] Write up each finding with severity, evidence, impact and remediation (see below)
+- [x] Port and service scan of the docker-compose stack with Nmap
+- [x] Static analysis with Bandit and dependency audit with pip-audit
+- [x] Container image scan with Trivy
+- [x] Add Bandit, pip-audit and Trivy to CI
+- [x] Write up each finding with severity, evidence, impact and remediation (see below)
 
 ## Quick start
 
@@ -125,6 +125,7 @@ Findings in my own project, tracked with severity and status. The severity ratin
 | TS-004 | Signup response reveals which emails are already registered | Low | Code review | Open |
 | TS-005 | Role is embedded in the JWT, so a role change or revocation is not reflected until expiry | Low | Code review | Open |
 | TS-006 | `tenants` table is readable by the app role and has no RLS policy | Low | Code review | Open |
+| TS-008 | Redis accepts commands without a password (published to 127.0.0.1 only) | Low | Nmap (redis-info) | Open: add requirepass; do not publish the port in deployment |
 
 Earlier finding, fixed: the app first connected as the Postgres owner role, which bypasses RLS. Tenant-scoped queries now use a separate non-superuser role (`tenantshield_app`).
 

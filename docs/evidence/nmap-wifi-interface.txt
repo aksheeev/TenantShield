@@ -1,0 +1,11 @@
+# Nmap 7.993 scan initiated Tue Nov 10 02:21:02 2026 as: "C:\\Program Files (x86)\\Nmap\\nmap.exe" -sT -sV -p 5432,6379,8000 -oN docs\\evidence\\nmap-wifi-interface.txt 192.168.1.64
+Nmap scan report for host.docker.internal (192.168.1.64)
+Host is up (0.00s latency).
+
+PORT     STATE  SERVICE    VERSION
+5432/tcp closed postgresql
+6379/tcp closed redis
+8000/tcp open   http-alt   uvicorn
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Tue Nov 10 02:21:14 2026 -- 1 IP address (1 host up) scanned in 11.84 seconds
