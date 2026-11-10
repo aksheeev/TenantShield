@@ -54,11 +54,11 @@ earlier login from Swagger counted toward the limit, and Burp Community's Intrud
 let the 60-second window expire mid-attack. A fixed window then starts fresh, which explains
 requests 11 to 15.
 
-**Re-test 2 (clean window, PowerShell loop).** [fill in after running Step 4b]
-- Requests 1 to 10: [ ]
-- Requests 11 to 15: [ ]
-- Correct password while limited: [ ]
-- Correct password after the window expired: [ ]
+**Re-test 2 (clean window, PowerShell loop).** Redis counters cleared with `FLUSHDB` first.
+- Requests 1 to 10: 401
+- Requests 11 to 15: 429
+- Correct password while limited: 429
+- Correct password after waiting [about N seconds]: 200 (TTL not captured)
 - Evidence: `docs/evidence/ts-002-after-run2.png`
 
 **Known limits.**
